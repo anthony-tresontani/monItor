@@ -50,6 +50,11 @@ class TestScript(TestCase):
         future = datetime.datetime.now() + datetime.timedelta(minutes=3)
 
         check_ok.run()
-        print "RUN 2" * 5        
         assert_that(get_next_run(date_run=future), contains(CheckJohnsen))
-        
+
+    def test_check_counter(self):
+        check_ok = CheckOK()
+        check_ok.run() 
+        check_ok = CheckOK()
+        check_ok.run() 
+        assert_that(check_ok.nb_run, is_(2))
