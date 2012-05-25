@@ -2,6 +2,10 @@ import datetime
 import glob
 import importlib
 
+from sqlalchemy import Column, Integer, String, DateTime, create_engine
+
+from connection import Session, Base
+
 check_scripts = set([])
 
 class CheckMetaClass(type):
@@ -19,8 +23,14 @@ class Check(object):
     _shared_dict = None
     def __init__(self):
         if not self.__class__._shared_dict:
-	    self.last_exc_time = None
-	    self.last_status = None
+            session = Session()
+            if session.query(Run).filter_by(name=self.check_name).count():
+                db_run = session.query(Run).filter_by(name=self.check_name).one()
+                self.last_exc_time = db_run.last_exc_time
+                self.last_status = db_run.status
+            else:
+	        self.last_exc_time = None
+	        self.last_status = None
 	    self._frequency = getattr(self, "frequency", None)
             self.__class__._shared_dict = self.__dict__
         else:
@@ -44,11 +54,11 @@ class Check(object):
         session = Session()
         if session.query(Run).filter_by(name=self.check_name).count():
            run = session.query(Run).filter_by(name=self.check_name).one()
-           run.last_exec_time = self.last_exc_time 
+           run.last_exc_time = self.last_exc_time 
            run.status = self.last_status
            run.nb_run = run.nb_run + 1
         else:
-           inst = Run(name=self.check_name, last_exec_time=self.last_exc_time, status=self.last_status, nb_run=1)
+           inst = Run(name=self.check_name, last_exc_time=self.last_exc_time, status=self.last_status, nb_run=1)
            session.add(inst)
         session.commit()
 
@@ -84,13 +94,6 @@ for filepath in glob.glob("scripts/check_*py"):
    file_import = ".".join(filepath.split(".")[:-1]).replace("/", ".")
    importlib.import_module(file_import)
 
-from sqlalchemy import Column, Integer, String, DateTime, create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-
-Base = declarative_base()
-engine = create_engine('sqlite:///test_db', echo=True)
-Session = sessionmaker(bind=engine)
 
 class Run(Base):
      __tablename__ = 'runs'
@@ -98,15 +101,15 @@ class Run(Base):
      id = Column(Integer, primary_key=True)
      name = Column(String)
      nb_run = Column(Integer)
-     last_exec_time = Column(DateTime)
+     last_exc_time = Column(DateTime)
      status = Column(String)
 
-     def __init__(self, name, last_exec_time, status, nb_run):
+     def __init__(self, name, last_exc_time, status, nb_run):
          self.name = name
-         self.last_exec_time = last_exec_time
+         self.last_exc_time = last_exc_time
          self.status = status
          self.nb_run = nb_run
  
 
      def __repr__(self):
-        return "<Run('%s','%s', '%s')>" % (self.name, self.status, self.last_exec_time)
+        return "<Run('%s','%s', '%s')>" % (self.name, self.status, self.last_exc_time)

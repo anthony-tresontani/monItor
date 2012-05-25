@@ -5,11 +5,14 @@ from scripts.check_log_sent_to_johnsen import *
 from hamcrest import *
 from monitor import *
 
+from connection import engine
+
 class TestScript(TestCase):
 
     def setUp(self):
         CheckOK._shared_dict = None
         CheckJohnsen._shared_dict = None
+        engine.execute("DELETE FROM RUNS;")
 
     def test_singleton(self):
         check = CheckOK()
