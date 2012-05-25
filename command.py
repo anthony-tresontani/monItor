@@ -1,25 +1,38 @@
-from monitor import get_check_scripts, Check
+from monitor import get_check_scripts, Check, get_next_run
 from clint.textui import colored, puts
 
-def main(list, action=None): 
+def main(list, all, action=None): 
     if list:
         print_action_list()
-    else:
+    elif all:
+        do_all()
+    elif action:
         do_check(action)
+    else:
+        puts(colored.red("You should provide an action"))
 
+
+def run_action(action, extra=""):
+    result = action.run()
+    color = colored.green if result == Check.OK else colored.red
+    puts(color(extra + result))
+
+def do_all():
+    for index, action in enumerate(get_next_run()):
+        action = action()
+        run_action(action, extra="%d. %s - " % (index +1, action.check_name))
 
 def do_check(action):
     action = filter(lambda check: check().check_name == action, get_check_scripts()) 
     if not action:
         puts(colored.red("This action doesn't exist"))
     else:
-        result = action[0]().run()
-        color = colored.green if result == Check.OK else colored.red
-        puts(color(result))
+        run_action(action[0]())
 
 
 main.__annotations__ = {
     "list" : ("list the available checksq", "flag", "l"),
+    "all" : ("Run all check according to their frequency", "flag", "a"),
     }
 
 

@@ -37,7 +37,6 @@ class TestScript(TestCase):
 	assert_that(check.last_exc["time"], not_none())
 
         assert_that(check.last_exc, has_entry("status", Check.OK))
-        assert_that(check.last_exc, has_entry("nb_run", 1))
 
     def test_next_run_first_time(self):
         check_ok = CheckOK()
@@ -51,10 +50,3 @@ class TestScript(TestCase):
 
         check_ok.run()
         assert_that(get_next_run(date_run=future), contains(CheckJohnsen))
-
-    def test_check_counter(self):
-        check_ok = CheckOK()
-        check_ok.run() 
-        check_ok = CheckOK()
-        check_ok.run() 
-        assert_that(check_ok.nb_run, is_(2))
