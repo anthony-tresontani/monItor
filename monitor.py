@@ -4,7 +4,8 @@ import importlib
 
 from sqlalchemy import Column, Integer, String, DateTime, create_engine
 
-from connection import Session, Base
+from config import Session, Base
+from notifier import NoActionNotifier, ConsoleNotifier
 
 check_scripts = set([])
 
@@ -31,6 +32,7 @@ class Check(object):
             else:
 	        self.last_exc_time = None
 	        self.last_status = None
+            self.notifiers = [NoActionNotifier(self)]
 	    self._frequency = getattr(self, "frequency", None)
             self.__class__._shared_dict = self.__dict__
         else:
@@ -62,10 +64,15 @@ class Check(object):
            session.add(inst)
         session.commit()
 
+    def notify(self):
+        for notifier in self.notifiers:
+            notifier.notify()
+
     def run(self):
         self.last_exc_time = datetime.datetime.now()
         self.last_status = self.check()
         self.save_in_db()
+        self.notify()
         return self.last_status
 
     @property
@@ -81,7 +88,7 @@ def get_next_run(date_run=datetime.datetime.now()):
     for check_class in get_check_scripts():
         check_instance = check_class()
         if check_instance.last_exc_time: 
-            if check_instance._frequency:
+            if check_instance._frequency is not None:
                 if check_instance.last_exc_time + datetime.timedelta(minutes=check_instance._frequency) > date_run:
                     continue
             else:

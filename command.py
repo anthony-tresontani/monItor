@@ -21,6 +21,8 @@ def do_all():
     for index, action in enumerate(get_next_run()):
         action = action()
         run_action(action, extra="%d. %s - " % (index +1, action.check_name))
+    else:
+        puts(colored.green("No check ready to be performed"))
 
 def do_check(action):
     action = filter(lambda check: check().check_name == action, get_check_scripts()) 

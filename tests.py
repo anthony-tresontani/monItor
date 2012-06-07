@@ -5,7 +5,7 @@ from scripts.check_log_sent_to_johnsen import *
 from hamcrest import *
 from monitor import *
 
-from connection import engine
+from config import engine
 
 class TestScript(TestCase):
 

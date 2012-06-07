@@ -1,7 +1,7 @@
 from monitor import Check
 
 class CheckOK(Check):
-    frequency = 10
+    frequency = 0
 
     def check(self):
         return Check.OK
