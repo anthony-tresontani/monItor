@@ -32,7 +32,7 @@ class Check(object):
             else:
 	        self.last_exc_time = None
 	        self.last_status = None
-            self.notifiers = [NoActionNotifier(self)]
+            self._notifiers = [notifier_class(self) for notifier_class in getattr(self, "notifiers", [NoActionNotifier])]
 	    self._frequency = getattr(self, "frequency", None)
             self.__class__._shared_dict = self.__dict__
         else:
@@ -65,7 +65,7 @@ class Check(object):
         session.commit()
 
     def notify(self):
-        for notifier in self.notifiers:
+        for notifier in self._notifiers:
             notifier.notify()
 
     def run(self):

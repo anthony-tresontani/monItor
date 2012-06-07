@@ -18,10 +18,11 @@ def run_action(action, extra=""):
     puts(color(extra + result))
 
 def do_all():
-    for index, action in enumerate(get_next_run()):
+    next_runs = get_next_run()
+    for index, action in enumerate(next_runs):
         action = action()
         run_action(action, extra="%d. %s - " % (index +1, action.check_name))
-    else:
+    if not next_runs:
         puts(colored.green("No check ready to be performed"))
 
 def do_check(action):

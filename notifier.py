@@ -6,6 +6,5 @@ class NoActionNotifier(object):
     def notify(self):pass
 
 class ConsoleNotifier(NoActionNotifier):
-
     def notify(self):
-        print self.check.last_status
+        print "Here"
