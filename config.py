@@ -8,4 +8,5 @@ Base = declarative_base()
 engine = create_engine('sqlite:///test_db', echo=False)
 Session = sessionmaker(bind=engine)
 
-NOTIFIERS = [ConsoleNotifier]
+
+SCRIPTS_FOLDER = ("scripts/check_*py",)

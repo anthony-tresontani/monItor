@@ -15,7 +15,8 @@ def main(list, all, action=None):
 def run_action(action, extra=""):
     result = action.run()
     color = colored.green if result == Check.OK else colored.red
-    puts(color(extra + result))
+    if result:
+        puts(color(extra + result))
 
 def do_all():
     next_runs = get_next_run()

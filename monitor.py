@@ -4,7 +4,7 @@ import importlib
 
 from sqlalchemy import Column, Integer, String, DateTime, create_engine
 
-from config import Session, Base
+from config import Session, Base, SCRIPTS_FOLDER
 from notifier import NoActionNotifier, ConsoleNotifier
 
 check_scripts = set([])
@@ -97,9 +97,11 @@ def get_next_run(date_run=datetime.datetime.now()):
     return to_run
 
 # automatic script import
-for filepath in glob.glob("scripts/check_*py"):
-   file_import = ".".join(filepath.split(".")[:-1]).replace("/", ".")
-   importlib.import_module(file_import)
+print SCRIPTS_FOLDER
+for path in SCRIPTS_FOLDER:
+    for filepath in glob.glob(path):
+        file_import = ".".join(filepath.split(".")[:-1]).replace("/", ".")
+        importlib.import_module(file_import)
 
 
 class Run(Base):
