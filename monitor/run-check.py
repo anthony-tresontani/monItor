@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import collections
 from monitor import config 
 from monitor.scheduler import get_check_scripts, Check, get_next_run
