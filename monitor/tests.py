@@ -1,14 +1,14 @@
 import datetime
-import config
 
 from unittest import TestCase
 from hamcrest import *
 
+from monitor import config
 from monitor.config import engine, SCRIPTS_FOLDER
 config.SCRIPTS_FOLDER = ("test_scripts/check_*py",)
 
 from monitor.scheduler import *
-from monitor.test_scripts.check_log_sent_to_johnsen import * 
+from test_scripts.check_log_sent_to_johnsen import * 
 
 class TestScript(TestCase):
 
