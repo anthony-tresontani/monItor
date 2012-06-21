@@ -5,7 +5,7 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(name='app-monitor',
-      version='0.1.0',
+      version='0.1.2',
       description='Check script scheduler',
       long_description =read('README.txt'),
       author='Anthony Tresontani',
@@ -13,6 +13,5 @@ setup(name='app-monitor',
       packages=['monitor'],
       include_package_data=True,
       scripts = ['monitor/run-check.py'],
-      install_requires = ['SQLAlchemy==0.7.6','']
+      install_requires = ['SQLAlchemy==0.7.6','clint==0.3.1', 'plac==0.9.1']
      )
-
