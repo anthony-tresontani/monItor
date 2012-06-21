@@ -3,12 +3,17 @@ from datetime import datetime
 from subprocess import Popen, PIPE;
 
 from monitor import Check
-from notifier import ConsoleNotifier
+from notifier import ConsoleNotifier, EmailNotifier
 
 class CheckJohnsen(Check):
-    frequency = 0
+    # Custom parameters
     gap_valid_in_days = 1
     mail_file = "mail.log"
+
+    # Generic parameters
+    frequency = 0    # Run everytime
+    notifiers = [ConsoleNotifier, EmailNotifier]     # Display the result in the console and send an email
+    error_message = "No mail has been send to Johnsen for more than %d day(s)" % gap_valid_in_days    # additional information on failure
 
     def check(self):
          p1 = Popen(["grep", "carlsberg@johnsen.dk",self.mail_file], stdout=PIPE)

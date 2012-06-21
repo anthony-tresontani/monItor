@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from notifier import ConsoleNotifier
 
 Base = declarative_base()
-engine = create_engine('sqlite:///test_db', echo=False)
+engine = create_engine('sqlite:///inner_db', echo=False)
 Session = sessionmaker(bind=engine)
 
 

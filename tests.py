@@ -4,7 +4,7 @@ import config
 from unittest import TestCase
 from hamcrest import *
 
-from config import engine
+from config import engine, SCRIPTS_FOLDER
 config.SCRIPTS_FOLDER = ("test_scripts/check_*py",)
 
 from monitor import *
@@ -31,8 +31,8 @@ class TestScript(TestCase):
         assert_that(CheckOK().run(), is_(Check.OK))
 
     def test_detection(self):
-        assert_that(get_check_scripts(), has_item(CheckJohnsen))
-        assert_that(len(get_check_scripts()), 2)
+        assert_that(get_check_scripts(SCRIPTS_FOLDER), has_item(CheckJohnsen))
+        assert_that(len(get_check_scripts(SCRIPTS_FOLDER)), 2)
         
     def test_execution_msg(self):
         check = CheckOK()

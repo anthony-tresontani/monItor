@@ -1,3 +1,4 @@
+import collections
 import datetime
 import glob
 import importlib
@@ -69,23 +70,22 @@ class Check(object):
             notifier.notify()
 
     def run(self):
+        self.previous_status = self.last_status
         self.last_exc_time = datetime.datetime.now()
         self.last_status = self.check()
         self.save_in_db()
-        self.notify()
+
+        if self.previous_status == self.OK and self.last_status != self.OK:
+            self.notify()
         return self.last_status
 
     @property
     def check_name(self):
         return getattr(self, "name", self.__class__.__name__)
 
-
-def get_check_scripts():
-    return check_scripts
-
-def get_next_run(date_run=datetime.datetime.now()):
+def get_next_run(scripts_folder=SCRIPTS_FOLDER, date_run=datetime.datetime.now()):
     to_run = set()
-    for check_class in get_check_scripts():
+    for check_class in get_check_scripts(scripts_folder):
         check_instance = check_class()
         if check_instance.last_exc_time: 
             if check_instance._frequency is not None:
@@ -97,11 +97,18 @@ def get_next_run(date_run=datetime.datetime.now()):
     return to_run
 
 # automatic script import
-print SCRIPTS_FOLDER
-for path in SCRIPTS_FOLDER:
-    for filepath in glob.glob(path):
-        file_import = ".".join(filepath.split(".")[:-1]).replace("/", ".")
-        importlib.import_module(file_import)
+def import_scripts(scripts_folder):
+    if isinstance(scripts_folder, str):
+        scripts_folder = [scripts_folder]
+    for path in scripts_folder:
+        for filepath in glob.glob(path):
+            file_import = ".".join(filepath.split(".")[:-1]).replace("/", ".")
+            importlib.import_module(file_import)
+
+
+def get_check_scripts(script_folder):
+    import_scripts(script_folder)
+    return check_scripts
 
 
 class Run(Base):
