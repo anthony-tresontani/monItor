@@ -1,1 +1,0 @@
-Jun  7 16:40:07 cdk-live postfix/smtp[22283]: 01F1282C9D: to=<carlsberg@johnsen.dk>, relay=cluster5.eu.messagelabs.com[195.245.230.51]:25, delay=0.57, delays=0.01/0.01/0.11/0.45, dsn=2.0.0, status=sent (250 ok 1339083607 qp 5169 server-7.tower-33.messagelabs.com!1339083607!20769557!1)

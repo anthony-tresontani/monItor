@@ -1,5 +1,0 @@
-clint==0.3.1
-nose==1.1.2
-plac==0.9.1
-pyparsing==1.5.6
-sqlalchemy

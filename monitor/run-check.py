@@ -1,6 +1,6 @@
 import collections
-import config 
-from monitor import get_check_scripts, Check, get_next_run
+from monitor import config 
+from monitor.scheduler import get_check_scripts, Check, get_next_run
 from clint.textui import colored, puts
 
 def main(list, all, action=None, scripts_pattern=config.SCRIPTS_FOLDER): 

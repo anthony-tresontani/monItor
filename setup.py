@@ -10,9 +10,9 @@ setup(name='monitor',
       long_description =read('README.txt'),
       author='Anthony Tresontani',
       author_email='dev.tresontani@gmail.com',
-      packages=['monitor', 'run-check', 'notifier','setup', 'config'],
+      packages=['monitor'],
       include_package_data=True,
-      scripts = ['run-check.py'],
+      scripts = ['monitor/run-check.py'],
       install_requires = ['SQLAlchemy==0.7.6','']
      )
 
