@@ -4,7 +4,7 @@ from setuptools import setup
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-setup(name='monitor',
+setup(name='app-monitor',
       version='0.1.0',
       description='Check script scheduler',
       long_description =read('README.txt'),
